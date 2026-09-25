@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { PersonneService } from '../../services/personne-service';
 
@@ -6,6 +6,7 @@ import { PersonneService } from '../../services/personne-service';
   selector: 'app-personnes-liste-component',
   imports: [],
   templateUrl: './personnes-liste-component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './personnes-liste-component.css',
 })
 export class PersonnesListeComponent {

@@ -1,21 +1,12 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Personne } from '../../models/personne';
 
 @Component({
   selector: 'app-personne-component',
   imports: [],
-  providers: [
-    {
-      provide: ActivatedRoute,
-      useValue: {
-        snapshot: {
-          data: { personne: { id: 1, nom: 'Doe', prenom: 'John' } },
-        },
-      },
-    },
-  ],
   templateUrl: './personne-component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './personne-component.css',
 })
 export class PersonneComponent {

@@ -1,9 +1,10 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'app-signals-demo',
   standalone: true,
   templateUrl: './signals-demo.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './signals-demo.component.css'
 })
 export class SignalsDemoComponent {
