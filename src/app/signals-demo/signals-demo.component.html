@@ -1,0 +1,19 @@
+<section class="demo" aria-labelledby="signals-title">
+  <h2 id="signals-title">Tester les signals</h2>
+  <p>{{ greeting() }} Les valeurs derivées se mettent à jour automatiquement.</p>
+
+  <div class="controls">
+    <button type="button" (click)="decrement()">-</button>
+    <output aria-live="polite">Compteur : {{ count() }}</output>
+    <button type="button" (click)="increment()">+</button>
+    <span>Double : {{ doubledCount() }}</span>
+    <button type="button" (click)="reset()">Réinitialiser</button>
+  </div>
+
+  <p>
+    <label>
+      Nom :
+      <input [value]="name()" (input)="updateName($event)" />
+    </label>
+  </p>
+</section>

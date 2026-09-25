@@ -1,0 +1,10 @@
+<h2>Liste des personnes</h2>
+
+
+
+
+@for (personne of personnes(); track personne.id) {
+  <p>
+    {{ personne.prenom }} {{ personne.nom }}
+  </p>
+}
