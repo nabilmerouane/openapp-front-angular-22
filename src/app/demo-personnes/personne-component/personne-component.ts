@@ -5,6 +5,16 @@ import { Personne } from '../../models/personne';
 @Component({
   selector: 'app-personne-component',
   imports: [],
+  providers: [
+    {
+      provide: ActivatedRoute,
+      useValue: {
+        snapshot: {
+          data: { personne: { id: 1, nom: 'Doe', prenom: 'John' } },
+        },
+      },
+    },
+  ],
   templateUrl: './personne-component.html',
   styleUrl: './personne-component.css',
 })
