@@ -1,0 +1,17 @@
+<h1>Nouvelle personne</h1>
+
+<form (submit)="submit($event)">
+  <div>
+    <label for="prenom"> Prénom </label>
+
+    <input id="prenom" type="text" [formField]="personneForm.prenom" />
+  </div>
+
+  <div>
+    <label for="nom"> Nom </label>
+
+    <input id="nom" type="text" [formField]="personneForm.nom" />
+  </div>
+
+  <button type="submit">Ajouter</button>
+</form>
