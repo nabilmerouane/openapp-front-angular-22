@@ -1,0 +1,41 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # nécessaire pour commitlint sur toute la PR
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint (ESLint + Stylelint)
+        run: |
+          npm run lint
+          npm run lint:css
+
+      - name: Format check
+        run: npx prettier --check .
+
+      - name: Commitlint (sur les commits de la PR)
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
+
+      - name: Tests
+        run: npm test -- --coverage
+
+      - name: Build
+        run: npm run build
