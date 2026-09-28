@@ -8,7 +8,6 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './personnes-liste-component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './personnes-liste-component.css',
 })
 export class PersonnesListeComponent {
   private readonly personneService = inject(PersonneService);

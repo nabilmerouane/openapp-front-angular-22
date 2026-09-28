@@ -7,7 +7,6 @@ import { Personne } from '../../models/personne';
   imports: [],
   templateUrl: './personne-component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './personne-component.css',
 })
 export class PersonneComponent {
   private readonly route = inject(ActivatedRoute);

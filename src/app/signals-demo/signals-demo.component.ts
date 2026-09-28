@@ -5,7 +5,7 @@ import { Component, computed, signal, ChangeDetectionStrategy } from '@angular/c
   standalone: true,
   templateUrl: './signals-demo.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './signals-demo.component.css'
+  styleUrl: './signals-demo.component.scss',
 })
 export class SignalsDemoComponent {
   readonly count = signal(0);

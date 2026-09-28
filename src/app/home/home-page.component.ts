@@ -7,6 +7,6 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './home-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './home-page.component.css'
+  styleUrl: './home-page.component.scss',
 })
 export class HomePageComponent {}
