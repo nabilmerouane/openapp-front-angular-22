@@ -4,7 +4,7 @@ import { personneResolver } from './personne-resolver';
 
 describe('personneResolverResolver', () => {
   const executeResolver = (...resolverParameters: Parameters<typeof personneResolver>) =>
-      TestBed.runInInjectionContext(() => personneResolver(...resolverParameters));
+    TestBed.runInInjectionContext(() => personneResolver(...resolverParameters));
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
