@@ -9,20 +9,17 @@ import { PersonneFormComponent } from './demo-personnes/personne-form/personne-f
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'signals-demo', component: SignalsDemoComponent },
+  { path: 'personnes', component: PersonnesListeComponent },
+  { path: 'personnes/nouveau', component: PersonneFormComponent },
   {
-    path: 'personnes',
-    component: PersonnesListeComponent,
-  },
-  {
-    path: 'personnes/nouveau',
+    path: 'personnes/:personneId/edit',
     component: PersonneFormComponent,
+    resolve: { personne: personneResolver },
   },
   {
     path: 'personnes/:personneId',
     component: PersonneComponent,
-    resolve: {
-      personne: personneResolver,
-    },
+    resolve: { personne: personneResolver },
   },
   { path: '**', redirectTo: '' },
 ];
