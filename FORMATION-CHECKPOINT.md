@@ -87,18 +87,24 @@ src/app/
 src/main/java/com/example/demojava17spring/
 ├── controller/
 │   └── PersonneController.java
-├── model/
+├── dto/
 │   ├── CreatePersonneRequest.java
-│   ├── Personne.java
 │   ├── PersonneResponse.java
 │   └── UpdatePersonneRequest.java
+├── exception/
+│   ├── GlobalExceptionHandler.java
+│   └── PersonneNotFoundException.java
+├── model/
+│   └── Personne.java
 ├── repository/
 │   └── PersonneRepository.java
 ├── service/
-│   ├── PersonneNotFoundException.java
 │   └── PersonneService.java
 └── DemoJava17SpringApplication.java
 ```
+
+Note : le package `com.example.demo` (vide) existe encore à côté de
+`demojava17spring`. À supprimer s'il ne sert à rien.
 
 ---
 
@@ -128,13 +134,13 @@ public class PersonneController {
   }
 
   @PostMapping
-  public PersonneResponse addPersonne(@RequestBody CreatePersonneRequest request) {
+  public PersonneResponse addPersonne(@Valid @RequestBody CreatePersonneRequest request) {
     return personneService.addPersonne(request);
   }
 
   @PutMapping("/{id}")
   public PersonneResponse updatePersonne(
-      @PathVariable Long id, @RequestBody UpdatePersonneRequest request) {
+      @PathVariable Long id, @Valid @RequestBody UpdatePersonneRequest request) {
     return personneService.updatePersonne(id, request);
   }
 }
@@ -200,25 +206,77 @@ public interface PersonneRepository extends JpaRepository<Personne, Long> {}
 
 ## DTOs
 
+Package `dto`. La validation est portée par `@NotBlank` (dépendance
+`spring-boot-starter-validation` dans le `pom.xml`) et déclenchée par
+`@Valid` dans le contrôleur. L'ordre des champs (`nom`, `prenom`) est
+aligné dans les deux records de requête.
+
 ```java
-public record CreatePersonneRequest(String nom, String prenom) {}
+public record CreatePersonneRequest(@NotBlank String nom, @NotBlank String prenom) {}
 ```
 
 ```java
-public record UpdatePersonneRequest(String prenom, String nom) {}
+public record UpdatePersonneRequest(@NotBlank String nom, @NotBlank String prenom) {}
 ```
 
 ```java
 public record PersonneResponse(Long id, String prenom, String nom) {}
 ```
 
-## Exception
+## Exceptions et gestion globale des erreurs
+
+Package `exception` (neutre : `controller` et `service` en dépendent
+sans se croiser).
 
 ```java
 public class PersonneNotFoundException extends RuntimeException {
 
   public PersonneNotFoundException(Long id) {
     super("Personne non trouvée avec l'id : " + id);
+  }
+}
+```
+
+```java
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(PersonneNotFoundException.class)
+    public ProblemDetail handlePersonneNotFound(PersonneNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Personne introuvable");
+        return problem;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST, "La requête contient des champs invalides");
+        problem.setTitle("Erreur de validation");
+
+        Map<String, List<String>> errors = ex.getBindingResult().getFieldErrors().stream()
+                .collect(Collectors.groupingBy(
+                        FieldError::getField,
+                        Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList())));
+
+        problem.setProperty("errors", errors);
+        return problem;
+    }
+}
+```
+
+Exemple de réponse 400 (nom et prénom vides) :
+
+```json
+{
+  "type": "about:blank",
+  "title": "Erreur de validation",
+  "status": 400,
+  "detail": "La requête contient des champs invalides",
+  "instance": "/api/personnes",
+  "errors": {
+    "nom": ["must not be blank"],
+    "prenom": ["must not be blank"]
   }
 }
 ```
@@ -372,12 +430,9 @@ export interface PersonneResponse {
 }
 ```
 
-```typescript
-export interface UpdatePersonneRequest {
-  nom: string;
-  prenom: string;
-}
-```
+Note : `UpdatePersonneRequest` existe dans le projet mais son contenu
+n'a pas été fourni dans le dernier checkpoint. Le récupérer du projet
+réel avant toute modification.
 
 ---
 
@@ -389,6 +444,12 @@ Le projet possède déjà plusieurs bonnes bases :
 - DTOs distincts de l'entité ;
 - `record` Java pour les DTOs ;
 - exception métier `PersonneNotFoundException` ;
+- validation backend des DTOs de création et de modification
+  (`@NotBlank` + `@Valid`) ;
+- gestion globale des erreurs (`@RestControllerAdvice`, `ProblemDetail`) :
+  404 pour une personne introuvable, 400 avec erreurs par champ pour
+  une requête invalide ;
+- packages `dto` et `exception` dédiés, `model` réservé à l'entité ;
 - repository Spring Data ;
 - Angular standalone ;
 - injection moderne avec `inject()` ;
@@ -398,30 +459,60 @@ Le projet possède déjà plusieurs bonnes bases :
 - resolver Angular ;
 - tests présents côté Angular et backend.
 
+## Décisions d'architecture prises (étape 1)
+
+- Le `GlobalExceptionHandler` et les exceptions métier vivent dans un
+  package `exception` neutre, plutôt que dans `controller` et
+  `service` (évite qu'un contrôleur dépende d'un détail du service).
+- Les DTOs sont séparés de l'entité dans un package `dto`.
+- Le 400 renvoie un `detail` fixe et un titre générique : on
+  n'expose jamais `ex.getMessage()` (contenu technique interne).
+- Les erreurs de validation sont regroupées avec `groupingBy` dans une
+  `Map<String, List<String>>` : pas d'exception si un même champ viole
+  plusieurs contraintes, et le front peut afficher les messages sous
+  le bon champ.
+- `ResponseEntityExceptionHandler` écarté pour l'instant :
+  une méthode `@ExceptionHandler` supplémentaire suffit.
+
 ---
 
 # 7. Points à examiner dans la prochaine session
 
 La prochaine étape prévue est :
 
-## Étape 1 --- rendre l'API REST professionnelle
+## Étape 1 --- rendre l'API REST professionnelle (en cours)
 
 Ne pas commencer par ajouter une nouvelle fonctionnalité métier.
 
-Faire d'abord une revue puis améliorer :
+### Avancement
+
+Fait :
+
+- validation backend : `@NotBlank` + `@Valid` (POST et PUT) ;
+- `spring-boot-starter-validation` ajouté au `pom.xml` ;
+- refactorisation en packages `dto` et `exception` ;
+- `GlobalExceptionHandler` : 404 (`PersonneNotFoundException`) et
+  400 (`MethodArgumentNotValidException`) au format `ProblemDetail`.
+
+Reste à faire :
+
+- contrat d'API, mapping DTO, tests backend ;
+- optionnel : `@Size`, messages de validation en français
+  (`@NotBlank(message = "...")`, ceux par défaut sont en anglais),
+  `ResponseEntityExceptionHandler` pour les autres erreurs Spring
+  (JSON malformé, type de paramètre invalide) ;
+- côté Angular : exploiter la propriété `errors` du 400 (voir plus bas).
+
+Ordre de travail restant :
 
 ### Backend
 
-1.  Validation des DTOs :
-    - `@Valid`
-    - `@NotBlank`
+1.  Validation des DTOs (**fait** pour `@Valid` et `@NotBlank`) :
     - éventuellement `@Size`
     - différences entre validation création / modification
-2.  Gestion globale des erreurs :
-    - `@RestControllerAdvice`
-    - `@ExceptionHandler`
-    - `ProblemDetail`
-    - distinction 400 / 404 / autres erreurs pertinentes
+2.  Gestion globale des erreurs (**fait** pour 404 et 400) :
+    - autres erreurs pertinentes (JSON malformé, paramètre invalide,
+      erreur 500 générique)
 3.  Contrat d'API :
     - codes HTTP
     - structure des réponses
@@ -437,11 +528,12 @@ Faire d'abord une revue puis améliorer :
     - tests du contrôleur
     - cas nominal
     - personne inexistante
-    - requête invalide
+    - requête invalide (vérifier le 400 et le format de `errors`)
 
 ### Angular
 
-1.  Gestion des erreurs HTTP.
+1.  Gestion des erreurs HTTP (le backend renvoie désormais un 400 avec
+    `error.error.errors.<champ>` : liste de messages par champ).
 2.  Typage des DTOs.
 3.  Gestion du loading.
 4.  Gestion de l'état d'erreur.
@@ -602,7 +694,7 @@ Méthode :
 - à la fin de chaque étape, indique ce qui a été appris et ce qui reste à faire.
 
 Étape courante indiquée par le checkpoint :
-Étape 1 — API REST professionnelle : validation + gestion globale des erreurs + contrats DTO + tests.
+Étape 1 — API REST professionnelle : la validation (@NotBlank/@Valid) et la gestion globale des erreurs (404 et 400 avec ProblemDetail) sont faites. Reste : contrat d'API, mapping DTO, tests, puis gestion des erreurs HTTP côté Angular.
 
 Commence par une revue de l'état actuel et identifie le premier changement à faire.
 ```
