@@ -12,12 +12,12 @@ export const routes: Routes = [
   { path: 'personnes', component: PersonnesListeComponent },
   { path: 'personnes/nouveau', component: PersonneFormComponent },
   {
-    path: 'personnes/:personneId/edit',
+    path: 'personnes/:id/edit',
     component: PersonneFormComponent,
     resolve: { personne: personneResolver },
   },
   {
-    path: 'personnes/:personneId',
+    path: 'personnes/:id',
     component: PersonneComponent,
     resolve: { personne: personneResolver },
   },

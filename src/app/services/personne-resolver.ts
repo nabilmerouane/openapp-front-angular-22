@@ -6,9 +6,10 @@ import { PersonneService } from './personne-service';
 
 export const personneResolver: ResolveFn<Personne> = (route): Observable<Personne> => {
   const personneService = inject(PersonneService);
-  const personneId = Number(route.params['personneId']);
+  // const id = Number(route.params['id']);
+  const id = route.params['id'];
 
-  return personneService.getPersonne(personneId).pipe(
+  return personneService.getPersonne(id).pipe(
     tap((personne) => {
       console.log('➡️ Resolver : personne reçue =', personne);
     }),
