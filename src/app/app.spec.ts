@@ -22,6 +22,6 @@ describe('App', () => {
     const fixture = TestBed.createComponent(HomePageComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, demo-angular-20-v1');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, demo-angular-22-v1');
   });
 });
