@@ -1,0 +1,51 @@
+<p-card header="Personnes" class="liste">
+  @if (chargement()) {
+    <p-progressbar mode="indeterminate" [style]="{ height: '4px' }" />
+  }
+
+  @if (erreur()) {
+    <p-message severity="error">Impossible de charger les personnes.</p-message>
+  }
+
+  <p-table
+    [value]="personnes()"
+    [lazy]="true"
+    [paginator]="true"
+    [totalRecords]="total()"
+    [rows]="size()"
+    [first]="first()"
+    [rowsPerPageOptions]="[10, 20, 50]"
+    [showFirstLastIcon]="true"
+    [loading]="chargement()"
+    dataKey="id"
+    (onPage)="onPage($event)"
+  >
+    <ng-template #header>
+      <tr>
+        <th>ID</th>
+        <th>Prénom</th>
+        <th>Nom</th>
+      </tr>
+    </ng-template>
+
+    <ng-template #body let-p>
+      <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.prenom }}</td>
+        <td>{{ p.nom }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td colspan="3">Aucune personne à afficher.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <ng-template #footer>
+    <div class="actions">
+      <p-button label="Ajouter une personne" routerLink="/personnes/nouveau" />
+    </div>
+  </ng-template>
+</p-card>

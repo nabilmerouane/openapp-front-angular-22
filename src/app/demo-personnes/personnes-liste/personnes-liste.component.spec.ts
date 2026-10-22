@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PersonnesListeComponent } from '../personnes-liste/personnes-liste-component';
+import { PersonnesListeComponent } from './personnes-liste.component';
 import { provideRouter } from '@angular/router';
 
 describe('PersonnesComponent', () => {

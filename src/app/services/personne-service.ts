@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CreatePersonneRequest } from '../models/create-personne-request';
 import { PersonneResponse } from '../models/personne-response';
 import { UpdatePersonneRequest } from '../models/update-personne-request';
+import { Page } from '../models/page';
 
 @Injectable({
   providedIn: 'root',
@@ -11,8 +12,9 @@ import { UpdatePersonneRequest } from '../models/update-personne-request';
 export class PersonneService {
   private readonly http = inject(HttpClient);
 
-  getPersonnes(): Observable<PersonneResponse[]> {
-    return this.http.get<PersonneResponse[]>('/api/personnes');
+  getPersonnes(page: number, size: number): Observable<Page<PersonneResponse>> {
+    const params = new HttpParams().set('page', page).set('size', size);
+    return this.http.get<Page<PersonneResponse>>('/api/personnes', { params });
   }
 
   getPersonne(id: number): Observable<PersonneResponse> {
@@ -25,5 +27,9 @@ export class PersonneService {
 
   updatePersonne(id: number, request: UpdatePersonneRequest): Observable<PersonneResponse> {
     return this.http.put<PersonneResponse>(`/api/personnes/${id}`, request);
+  }
+
+  deletePersonne(id: number): Observable<void> {
+    return this.http.delete<void>(`/api/personnes/${id}`);
   }
 }
