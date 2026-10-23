@@ -1,15 +1,76 @@
-<h1>{{ personne ? 'Modifier la personne' : 'Nouvelle personne' }}</h1>
+<section class="page">
+  <form (submit)="submit($event)" class="form">
+    <p-card styleClass="card">
+      <ng-template #header>
+        <div class="hero">
+          <p-avatar
+            [icon]="personne ? 'pi pi-user-edit' : 'pi pi-user-plus'"
+            size="xlarge"
+            shape="circle"
+            styleClass="hero__avatar"
+          />
+          <div class="hero__text">
+            <h1 class="hero__title">
+              {{ personne ? 'Modifier la personne' : 'Nouvelle personne' }}
+            </h1>
+            <p class="hero__subtitle">
+              {{
+                personne
+                  ? 'Mettez à jour les informations ci-dessous.'
+                  : 'Renseignez les informations ci-dessous.'
+              }}
+            </p>
+          </div>
+        </div>
+      </ng-template>
 
-<form (submit)="submit($event)">
-  <div>
-    <label for="prenom">Prénom</label>
-    <input id="prenom" type="text" [formField]="personneForm.prenom" />
-  </div>
-  <div>
-    <label for="nom">Nom</label>
-    <input id="nom" type="text" [formField]="personneForm.nom" />
-  </div>
-  <button type="submit">
-    {{ personne ? 'Enregistrer' : 'Ajouter' }}
-  </button>
-</form>
+      <div class="fields">
+        <div class="field">
+          <label for="prenom" class="field__label"> <i class="pi pi-user"></i> Prénom </label>
+          <input
+            id="prenom"
+            type="text"
+            pInputText
+            fluid
+            placeholder="Ex : Marie"
+            autocomplete="given-name"
+            [formField]="personneForm.prenom"
+          />
+        </div>
+
+        <div class="field">
+          <label for="nom" class="field__label"> <i class="pi pi-user"></i> Nom </label>
+          <input
+            id="nom"
+            type="text"
+            pInputText
+            fluid
+            placeholder="Ex : Dupont"
+            autocomplete="family-name"
+            [formField]="personneForm.nom"
+          />
+        </div>
+      </div>
+
+      <ng-template #footer>
+        <div class="actions">
+          <a
+            pButton
+            severity="secondary"
+            [outlined]="true"
+            [routerLink]="personne ? ['/personnes', personne.id] : ['/personnes']"
+          >
+            <i class="pi pi-arrow-left" pButtonIcon></i>
+            <span pButtonLabel>Retour à la liste</span>
+          </a>
+          <button pButton type="submit" [disabled]="saving() || personneForm().invalid()">
+            <i
+              [class]="saving() ? 'pi pi-spinner pi-spin' : personne ? 'pi pi-check' : 'pi pi-plus'"
+            ></i>
+            {{ personne ? 'Enregistrer' : 'Ajouter' }}
+          </button>
+        </div>
+      </ng-template>
+    </p-card>
+  </form>
+</section>

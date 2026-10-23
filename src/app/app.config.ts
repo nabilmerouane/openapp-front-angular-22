@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideHttpClient(withXhr()),
+    MessageService,
     providePrimeNG({
       theme: { preset: Aura },
       license:

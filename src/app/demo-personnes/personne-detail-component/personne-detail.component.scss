@@ -1,0 +1,144 @@
+:host {
+  display: block;
+}
+
+.page {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.p-card {
+  width: 100%;
+  max-width: 36rem;
+  overflow: hidden;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 8%);
+}
+
+// ---------- En-tête ----------
+.hero {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 2rem 1.5rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--p-primary-600, #4f46e5), var(--p-primary-400, #818cf8));
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__name {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+}
+
+.p-avatar {
+  background: rgb(255 255 255 / 20%);
+  color: #fff;
+  font-weight: 700;
+  text-transform: uppercase;
+  border: 3px solid rgb(255 255 255 / 60%);
+}
+
+// ---------- Détails ----------
+.details {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem 0;
+
+    & + & {
+      border-top: 1px solid var(--p-content-border-color, #e5e7eb);
+    }
+  }
+
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--p-text-muted-color, #6b7280);
+    font-size: 0.9rem;
+
+    i {
+      color: var(--p-primary-color, #4f46e5);
+    }
+  }
+
+  dd {
+    margin: 0;
+    font-weight: 600;
+    color: var(--p-text-color, #111827);
+  }
+}
+
+// ---------- Actions ----------
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+// ---------- États (chargement / erreurs) ----------
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+
+  &__lines {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+}
+
+.p-skeleton {
+  margin-bottom: 0.75rem;
+}
+
+.state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+  text-align: center;
+
+  &__icon {
+    font-size: 3rem;
+    color: var(--p-orange-500, #f97316);
+
+    &--error {
+      color: var(--p-red-500, #ef4444);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+
+    p-button {
+      width: 100%;
+    }
+  }
+}

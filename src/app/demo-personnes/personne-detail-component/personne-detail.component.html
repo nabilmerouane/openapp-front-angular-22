@@ -1,0 +1,101 @@
+@if (state$ | async; as state) {
+  <section class="page">
+    @switch (state.status) {
+      @case ('loading') {
+        <p-card styleClass="card">
+          <div class="loading">
+            <p-skeleton shape="circle" size="5rem" />
+            <div class="loading__lines">
+              <p-skeleton width="12rem" height="1.5rem" />
+              <p-skeleton width="8rem" height="1rem" />
+            </div>
+          </div>
+          <p-divider />
+          <p-skeleton height="3rem" styleClass="loading__row" />
+          <p-skeleton height="3rem" />
+        </p-card>
+      }
+
+      @case ('not-found') {
+        <p-card styleClass="card">
+          <div class="state">
+            <i class="pi pi-user-minus state__icon"></i>
+            <p-message severity="warn">Cette personne n'existe pas ou a été supprimée.</p-message>
+            <a pButton severity="secondary" [outlined]="true" routerLink="/personnes">
+              <i class="pi pi-arrow-left" pButtonIcon></i>
+              <span pButtonLabel>Retour à la liste</span>
+            </a>
+          </div>
+        </p-card>
+      }
+
+      @case ('error') {
+        <p-card styleClass="card">
+          <div class="state">
+            <i class="pi pi-exclamation-triangle state__icon state__icon--error"></i>
+            <p-message severity="error" text="Une erreur est survenue. Réessayez plus tard." />
+            <a pButton severity="secondary" [outlined]="true" routerLink="/personnes">
+              <i class="pi pi-arrow-left" pButtonIcon></i>
+              <span pButtonLabel>Retour à la liste</span>
+            </a>
+          </div>
+        </p-card>
+      }
+
+      @case ('success') {
+        <p-card styleClass="card">
+          <ng-template #header>
+            <div class="hero">
+              <p-avatar
+                [label]="state.personne.prenom.charAt(0) + state.personne.nom.charAt(0)"
+                size="xlarge"
+                shape="circle"
+                styleClass="hero__avatar"
+              />
+              <div class="hero__text">
+                <h1 class="hero__name">{{ state.personne.prenom }} {{ state.personne.nom }}</h1>
+                <p-tag
+                  value="ID {{ state.personne.id }}"
+                  severity="secondary"
+                  icon="pi pi-hashtag"
+                />
+              </div>
+            </div>
+          </ng-template>
+
+          <dl class="details">
+            <div class="details__item">
+              <dt><i class="pi pi-id-card"></i> Identifiant</dt>
+              <dd>{{ state.personne.id }}</dd>
+            </div>
+            <div class="details__item">
+              <dt><i class="pi pi-user"></i> Nom</dt>
+              <dd>{{ state.personne.nom }}</dd>
+            </div>
+            <div class="details__item">
+              <dt><i class="pi pi-user"></i> Prénom</dt>
+              <dd>{{ state.personne.prenom }}</dd>
+            </div>
+          </dl>
+
+          <ng-template #footer>
+            <div class="actions">
+              <a pButton severity="secondary" [outlined]="true" routerLink="/personnes">
+                <i class="pi pi-arrow-left" pButtonIcon></i>
+                <span pButtonLabel>Retour à la liste</span>
+              </a>
+              <a
+                pButton
+                severity="success"
+                [routerLink]="['/personnes', state.personne.id, 'edit']"
+              >
+                <i class="pi pi-pencil" pButtonIcon></i>
+                <span pButtonLabel>Modifier</span>
+              </a>
+            </div>
+          </ng-template>
+        </p-card>
+      }
+    }
+  </section>
+}

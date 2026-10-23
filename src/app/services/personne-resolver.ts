@@ -1,17 +1,21 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { ResolveFn } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { RedirectCommand, ResolveFn, Router } from '@angular/router';
+import { catchError, of, throwError } from 'rxjs';
 import { Personne } from '../models/personne';
 import { PersonneService } from './personne-service';
 
-export const personneResolver: ResolveFn<Personne> = (route): Observable<Personne> => {
+export const personneResolver: ResolveFn<Personne> = (route) => {
   const personneService = inject(PersonneService);
-  // const id = Number(route.params['id']);
-  const id = route.params['id'];
+  const router = inject(Router);
+  const id = Number(route.paramMap.get('id'));
 
   return personneService.getPersonne(id).pipe(
-    tap((personne) => {
-      console.log('➡️ Resolver : personne reçue =', personne);
+    catchError((err: HttpErrorResponse) => {
+      if (err.status === 404) {
+        return of(new RedirectCommand(router.parseUrl('/personnes')));
+      }
+      return throwError(() => err);
     }),
   );
 };

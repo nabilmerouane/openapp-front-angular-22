@@ -54,8 +54,8 @@ src/app/
 ├── demo-personnes/
 │   ├── personne-component/
 │   │   ├── personne-component.html
-│   │   ├── personne-component.spec.ts
-│   │   └── personne-component.ts
+│   │   ├── personne-detail-component.spec.ts
+│   │   └── personne-detail-component.ts
 │   ├── personne-form/
 │   │   ├── personne-form.component.html
 │   │   ├── personne-form.component.spec.ts
@@ -312,16 +312,16 @@ export class PersonneService {
 }
 ```
 
-## PersonneComponent
+## PersonneDetailComponent
 
 ```typescript
 @Component({
-  selector: 'app-personne-component',
+  selector: 'app-personne-detail',
   imports: [],
-  templateUrl: './personne-component.html',
+  templateUrl: './personne-detail-component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PersonneComponent {
+export class PersonneDetailComponent {
   private readonly route = inject(ActivatedRoute);
 
   readonly personne = this.route.snapshot.data['personne'] as Personne;
@@ -377,7 +377,7 @@ export class PersonneFormComponent {
 }
 ```
 
-## PersonneComponent HTML
+## PersonneDetailComponent HTML
 
 ```html
 <p>ID : {{ personne.id }}</p>

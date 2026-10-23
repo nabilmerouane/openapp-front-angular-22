@@ -25,6 +25,7 @@
         <th>ID</th>
         <th>Prénom</th>
         <th>Nom</th>
+        <th>Actions</th>
       </tr>
     </ng-template>
 
@@ -33,19 +34,52 @@
         <td>{{ p.id }}</td>
         <td>{{ p.prenom }}</td>
         <td>{{ p.nom }}</td>
+        <td>
+          <a
+            pButton
+            [text]="true"
+            severity="secondary"
+            [routerLink]="['/personnes', p.id]"
+            aria-label="Éditer la personne"
+          >
+            <i class="pi pi-pencil"></i>
+          </a>
+
+          <button
+            pButton
+            type="button"
+            [text]="true"
+            severity="danger"
+            aria-label="Supprimer la personne"
+            (click)="confirmerSuppression(p)"
+          >
+            <i class="pi pi-trash"></i>
+          </button>
+        </td>
       </tr>
     </ng-template>
 
     <ng-template #emptymessage>
       <tr>
-        <td colspan="3">Aucune personne à afficher.</td>
+        <td colspan="4">Aucune personne à afficher.</td>
       </tr>
     </ng-template>
   </p-table>
 
+  <p-confirmdialog />
   <ng-template #footer>
     <div class="actions">
-      <p-button label="Ajouter une personne" routerLink="/personnes/nouveau" />
+      <button
+        pButton
+        type="button"
+        label="Ajouter une personne"
+        icon="pi pi-plus"
+        severity="success"
+        aria-label="Ajouter une personne"
+        routerLink="/personnes/nouveau"
+      >
+        Ajouter une personne
+      </button>
     </div>
   </ng-template>
 </p-card>

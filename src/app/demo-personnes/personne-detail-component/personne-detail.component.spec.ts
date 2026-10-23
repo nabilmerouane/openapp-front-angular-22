@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PersonneComponent } from './personne-component';
+import { PersonneDetailComponent } from './personne-detail.component';
 import { ActivatedRoute } from '@angular/router';
 
-describe('PersonneComponent', () => {
-  let component: PersonneComponent;
-  let fixture: ComponentFixture<PersonneComponent>;
+describe('PersonneDetailComponent', () => {
+  let component: PersonneDetailComponent;
+  let fixture: ComponentFixture<PersonneDetailComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PersonneComponent],
+      imports: [PersonneDetailComponent],
       providers: [
         {
           provide: ActivatedRoute,
@@ -22,7 +22,7 @@ describe('PersonneComponent', () => {
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PersonneComponent);
+    fixture = TestBed.createComponent(PersonneDetailComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
