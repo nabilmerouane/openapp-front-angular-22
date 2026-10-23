@@ -60,9 +60,10 @@
             [outlined]="true"
             [routerLink]="personne ? ['/personnes', personne.id] : ['/personnes']"
           >
-            <i class="pi pi-arrow-left" pButtonIcon></i>
-            <span pButtonLabel>Retour à la liste</span>
+            <i class="pi pi-times"></i>
+            Annuler
           </a>
+
           <button pButton type="submit" [disabled]="saving() || personneForm().invalid()">
             <i
               [class]="saving() ? 'pi pi-spinner pi-spin' : personne ? 'pi pi-check' : 'pi pi-plus'"

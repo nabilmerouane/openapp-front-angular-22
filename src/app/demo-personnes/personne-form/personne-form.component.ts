@@ -16,6 +16,7 @@ import { ButtonDirective, ButtonModule } from 'primeng/button';
 @Component({
   selector: 'app-personne-form',
   templateUrl: './personne-form.component.html',
+  styleUrls: ['./personne-form.component.scss'],
   imports: [RouterLink, FormField, Card, InputText, Avatar, ButtonDirective, ButtonModule],
 })
 export class PersonneFormComponent {
